@@ -18,9 +18,7 @@ class SLA(BaseModel):
 
 class ServerContext(BaseModel):
     port: int = Field(
-        default=3000, 
-        ge=80, 
-        le=65535, 
+        default=3000,
         description="Port number for the server"
     )
 
@@ -32,4 +30,4 @@ class Context(BaseModel):
     def __init__(self, yaml_path: str):
         with open(yaml_path, "r") as f:
             data = yaml.safe_load(f)
-        super.__init__(**data)
+        super().__init__(**data)

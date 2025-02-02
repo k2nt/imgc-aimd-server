@@ -2,11 +2,16 @@ import uvicorn
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from src.server.api.router import router
+from server.api.router import router
+from server.di import DI
 
 
 def on_startup():
-    pass
+    di = DI()
+    di.init_resources()
+    di.wire(
+        modules=['src.server.main', 'src.server.api.v1.classify']
+    )
 
 
 def on_shutdown():
@@ -30,3 +35,4 @@ def launch():
 
 if __name__ == "__main__":
     launch()
+    
