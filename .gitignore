@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+env/
+venv/
+pip-wheel-metadata/
+poetry.lock
+
+# FastAPI logs and cache
+*.log
+*.sqlite3
+*.db
+instance/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# TensorFlow & ML related
+saved_model/
+*.pb
+logs/
+tensorboard/
+checkpoints/
+
+# Pytest / testing
+.coverage
+pytest_cache/
+htmlcov/
+
+# Uvicorn reload files
+*.pid
+
+
