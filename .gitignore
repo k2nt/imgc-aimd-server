@@ -28,6 +28,7 @@ instance/
 Thumbs.db
 
 .idea-cp-cp
+#.idea
 
 # Python packaging
 build/
