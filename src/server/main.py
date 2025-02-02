@@ -5,19 +5,19 @@ from contextlib import asynccontextmanager
 from src.server.api.router import router
 
 
-def on_startup(app : FastAPI):
+def on_startup():
     pass
 
 
-def on_shutdown(app : FastAPI):
+def on_shutdown():
     pass
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    on_startup(app)
+    on_startup()
     yield
-    on_shutdown(app)
+    on_shutdown()
 
 
 app = FastAPI(lifespan=lifespan)

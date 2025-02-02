@@ -1,9 +1,10 @@
-from abc import ABC, abstractmethod
+"""Image classification"""
+
 from typing import List
 
 import keras
 import numpy as np
-from keras.api.applications.resnet50 import ResNet50, decode_predictions, preprocess_input
+from keras.api.applications.resnet50 import ResNet50, decode_predictions
 
 
 class BaseModel:
