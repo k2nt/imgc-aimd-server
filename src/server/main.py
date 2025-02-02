@@ -5,17 +5,11 @@ from contextlib import asynccontextmanager
 from src.server.api.router import router
 
 
-ctx = None
-
-
 def on_startup(app : FastAPI):
-    # Load ML Model
-    print("in on_startup")
     pass
 
 
 def on_shutdown(app : FastAPI):
-    print("in on_shutdown")
     pass
 
 

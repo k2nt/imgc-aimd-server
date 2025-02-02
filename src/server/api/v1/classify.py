@@ -15,6 +15,6 @@ async def classify(file: UploadFile = File(...)):
     return JSONResponse(content=content_ok(), status_code=http.HTTPStatus.OK)
 
 
-@router.post('/buffer', status_code=http.HTTPStatus.OK)
+@router.post('/buffer')
 async def classify_buffer():
     return JSONResponse(content=content_ok(), status_code=http.HTTPStatus.OK)
