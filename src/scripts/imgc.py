@@ -3,7 +3,6 @@ import time
 
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
 from keras.api.applications.resnet50 import ResNet50, decode_predictions, preprocess_input
