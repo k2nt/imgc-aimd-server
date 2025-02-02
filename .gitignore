@@ -27,6 +27,8 @@ instance/
 .DS_Store
 Thumbs.db
 
+.idea-cp-cp
+
 # Python packaging
 build/
 dist/
