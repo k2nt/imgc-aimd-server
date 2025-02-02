@@ -19,7 +19,7 @@ class SLA(BaseModel):
 class ServerContext(BaseModel):
     port: int = Field(
         default=3000, 
-        ge=1024, 
+        ge=80, 
         le=65535, 
         description="Port number for the server"
     )
