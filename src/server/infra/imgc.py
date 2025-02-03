@@ -16,8 +16,8 @@ class ImgcModel:
 
         classifications = []
         for pred in decoded:
-            _, label, confidence = pred
-            classifications.append(Classification(label, confidence))
+            _, label, confidence = pred[0]
+            classifications.append(Classification(label=label, confidence=confidence))
 
         return classifications
 

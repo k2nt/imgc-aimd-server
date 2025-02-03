@@ -16,7 +16,7 @@ class ImgcService:
             image_bytes: bytes
     ) -> Classification:
         image_array = preprocess_image_resnet(image_bytes)
-        results = self.model.classify(image_array)
+        results = self._model.classify(image_array)
         return results[0]
         
     def classify_batch(
@@ -28,6 +28,6 @@ class ImgcService:
         return self.model.classify(batch_image_array)
 
 
-class Resnet50Service:
+class Resnet50Service(ImgcService):
     def __init__(self):
         super().__init__(Resnet50Model())
