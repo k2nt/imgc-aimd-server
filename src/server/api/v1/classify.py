@@ -20,7 +20,10 @@ async def classify(
         svc: Resnet50Service = Depends(Provide[DI.resnet50_service])
 ):
     if image.content_type not in ["image/jpeg", "image/png"]:
-        raise HTTPException(status_code=400, detail="Invalid image type. Only JPEG and PNG are allowed.")
+        raise HTTPException(
+            status_code=http.HTTPStatus.BAD_REQUEST, 
+            detail="Invalid image type. Only JPEG and PNG are allowed."
+        )
     
     image_bytes = await image.read()
     classification = svc.classify(image_bytes)
@@ -32,5 +35,20 @@ async def classify(
 
 
 @router.post('/buffer')
-async def classify_buffer():
-    return JSONResponse(content=content_ok(), status_code=http.HTTPStatus.OK)
+async def classify_buffer(
+        image: UploadFile = File(...),
+        svc: Resnet50Service = Depends(Provide[DI.resnet50_service])
+):
+    if image.content_type not in ["image/jpeg", "image/png"]:
+        raise HTTPException(
+            status_code=http.HTTPStatus.BAD_REQUEST, 
+            detail="Invalid image type. Only JPEG and PNG are allowed."
+        )
+
+    image_bytes = await image.read()
+    classification = svc.classify(image_bytes)
+
+    return JSONResponse(
+        content=content_ok(data=classification.model_dump()), 
+        status_code=http.HTTPStatus.OK
+    )
