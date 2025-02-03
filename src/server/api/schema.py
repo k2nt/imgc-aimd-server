@@ -1,29 +1,41 @@
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel
+import http
+
+from fastapi import HTTPException, Request
+from fastapi.responses import JSONResponse
 
 
-class BaseContent(BaseModel):
-    """Base content.py schema."""
-    message: str
-    data: Optional[Dict[str, Any]] = {}
+class BadHTTPException(HTTPException):
+    def __init__(self, code: str, error: str, status_code: int):
+        detail = {'code': code, 'data': {'error': error}}
+        super().__init__(status_code=status_code, detail=detail)
 
 
-def content(message: str, data: Optional[Any] = None) -> Dict[str, Any]:
-    return BaseContent(message=message, data=data).model_dump(exclude_none=True)
+async def bad_http_exception_handler(_: Request, exc: BadHTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=exc.detail,
+    )
 
 
-def content_ok(data: Optional[Any] = None) -> Dict[str, Any]:
-    return content(message="ok", data=data)
+class BadRequestException(BadHTTPException):
+    def __init__(self, error: str = ''):
+        super().__init__(
+            code='bad_request',
+            error=error,
+            status_code=http.HTTPStatus.BAD_REQUEST
+        )
 
 
-def content_bad_request(data: Optional[Any] = None) -> Dict[str, Any]:
-    return content(message="bad_request", data=data)
+class InternalServerErrorException(BadHTTPException):
+    def __init__(self, error: str = ''):
+        super().__init__(
+            code='internal_server_error', 
+            error=error, 
+            status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR
+        )
 
 
-def content_not_found(data: Optional[Any] = None) -> Dict[str, Any]:
-    return content(message="not_found", data=data)
-
-
-def content_internal_error(data: Optional[Any] = None) -> Dict[str, Any]:
-    return content(message="internal_error", data=data)
+def response_ok(data: Optional[Dict[str, Any]]) -> JSONResponse:
+    return JSONResponse(content=data, status_code=http.HTTPStatus.OK)

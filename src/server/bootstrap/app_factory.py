@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from server.api.router import router
+from server.api.schema import bad_http_exception_handler
 from server.api.middleware.buffer import AIMDBufferMiddleware
 from server.bootstrap.di import DI
 from server.bootstrap.context import Context
@@ -29,6 +30,7 @@ async def lifespan(app: FastAPI):
 def build_app(ctx: Context) -> FastAPI:
     app = FastAPI(lifespan=lifespan)
     app.include_router(router)
+    app.exception_handler(bad_http_exception_handler)
     # app.add_middleware(
     #     AIMDBufferMiddleware, 
     #     init_capacity=ctx.sla.init_buffer_size_num_req,
