@@ -1,14 +1,10 @@
 import os
 import time
 
-import tensorflow as tf
 import numpy as np
-from io import BytesIO
 from PIL import Image
 from keras.api.applications.resnet50 import ResNet50, decode_predictions, preprocess_input
 from keras.api.preprocessing import image
-
-from cifar import load_cifar100_pickle, load_label_names, preprocess_cifar100_images
 
 
 model = ResNet50(weights='imagenet')
@@ -38,7 +34,7 @@ def classify_image(img_path: str):
     img = Image.open(img_path).convert("RGB")  # Open image and convert to RGB
     img_array = preprocess_image(img)
     preds = model.predict(img_array)  # Make predictions
-    decoded_preds = decode_predictions(preds, top=3)[0]  # Decode top 3 predictions
+    decoded_preds = decode_predictions(preds, top=1)[0]  # Decode top 3 predictions
 
     # Print results
     for i, (imagenet_id, label, score) in enumerate(decoded_preds):
@@ -74,6 +70,8 @@ def classify_batch(image_folder):
     # Decode predictions
     decoded_preds = decode_predictions(predictions, top=3)
 
+    print("AAAA", decoded_preds)
+
     # Print results
     for i, img_path in enumerate(image_paths):
         print(f"Predictions for {img_path}:")
@@ -89,22 +87,10 @@ def classify_sequential(image_folder):
         classify_image(img_path)
 
 
-def classify_cifar100_images(n, x, y, label_names):
-    images = preprocess_cifar100_images(x[:n])  # Resize using TensorFlow
-    predictions = model.predict(images)  # Get predictions
-    decoded_preds = decode_predictions(predictions, top=3)  # Decode top 3 predictions
-
-    for i in range(n):
-        plt.imshow(image.array_to_img(x[i]))  # Show original image
-        plt.axis("off")
-        print(f"Actual: {label_names[y[i]]}\nPredicted: {decoded_preds[i][0][1]} ({decoded_preds[i][0][2]:.4f})")
-        plt.show()
-
-
 SINGLE_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/single"
 CIFAR_100_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/cifar-100-python"
 CAT_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/animal/animals/animals/cat"
-ANIMAL_RANDOM_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/animal/animals/animals-random"
+ANIMAL_RANDOM_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-datasets/animal/animals/animals/cat"
 
 classify_batch(ANIMAL_RANDOM_DATASET_FOLDER)
-classify_sequential(ANIMAL_RANDOM_DATASET_FOLDER)
+# classify_sequential(ANIMAL_RANDOM_DATASET_FOLDER)

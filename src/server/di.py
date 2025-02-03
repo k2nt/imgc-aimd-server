@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
 
-from server.entity.context import Context
+from server.domain.entity.context import Context
 
 
 class DI(containers.DeclarativeContainer):

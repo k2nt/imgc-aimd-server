@@ -13,11 +13,7 @@ router = APIRouter(prefix='/classify', tags=['classify'])
 
 
 @router.post('/single')
-@inject
-async def classify(
-    ctx: Context = Depends(Provide[DI.context])
-):
-    print("AAAA", ctx.sla, ctx.server)
+async def classify():
     return JSONResponse(content=content_ok(), status_code=http.HTTPStatus.OK)
 
 
