@@ -2,8 +2,14 @@ from typing import Any, Dict, Optional
 
 import http
 
+from pydantic import BaseModel
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
+
+
+class BaseContent(BaseModel):
+    code: str
+    data: Dict[str, Any]
 
 
 class BadHTTPException(HTTPException):

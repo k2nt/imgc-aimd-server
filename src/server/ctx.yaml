@@ -1,6 +1,11 @@
 sla:
-  max_req_latency_ms: 50
+  max_latency_ms: 50
   init_buffer_capacity_num_req: 5
+
+aimd_buffer:
+  init_capacity_num_req: 5
+  incr_amt: 2
+  decr_fct: 0.9
 
 server:
   port: 3000

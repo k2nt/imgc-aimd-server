@@ -1,7 +1,4 @@
-import http
-
 from fastapi import APIRouter, File, UploadFile, Depends
-from fastapi.responses import JSONResponse
 from dependency_injector.wiring import Provide, inject
 
 from server.bootstrap.di import DI
