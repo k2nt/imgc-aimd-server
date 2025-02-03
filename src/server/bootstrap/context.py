@@ -27,7 +27,8 @@ class Context(BaseModel):
     sla: SLA
     server: ServerContext
 
-    def __init__(self, yaml_path: str):
-        with open(yaml_path, "r") as f:
-            data = yaml.safe_load(f)
-        super().__init__(**data)
+
+def load_context_from_yaml(yaml_path: str) -> Context:
+    with open(yaml_path, "r") as f:
+        data = yaml.safe_load(f)
+    return Context(**data)

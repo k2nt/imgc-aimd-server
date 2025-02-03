@@ -4,9 +4,8 @@ from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from dependency_injector.wiring import Provide, inject
 
-from server.di import DI
+from server.bootstrap.di import DI
 from server.api.schema import content_ok
-from server.domain.entity.context import Context
 from server.api.controller.imgc import Resnet50Controller
 
 
@@ -17,7 +16,7 @@ router = APIRouter(prefix='/classify', tags=['classify'])
 @inject
 async def classify(
         image: UploadFile = File(...),
-        svc: Resnet50Controller = Depends(Provide[DI.resnet50_service])
+        c: Resnet50Controller = Depends(Provide[DI.resnet50_controller])
 ):
     if image.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
@@ -26,7 +25,7 @@ async def classify(
         )
     
     image_bytes = await image.read()
-    classification = svc.classify(image_bytes)
+    classification = c.classify(image_bytes)
 
     return JSONResponse(
         content=content_ok(data=classification.model_dump()), 
@@ -37,7 +36,7 @@ async def classify(
 @router.post('/buffer')
 async def classify_buffer(
         image: UploadFile = File(...),
-        svc: Resnet50Controller = Depends(Provide[DI.resnet50_service])
+        c: Resnet50Controller = Depends(Provide[DI.resnet50_controller])
 ):
     if image.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
@@ -46,7 +45,7 @@ async def classify_buffer(
         )
 
     image_bytes = await image.read()
-    classification = svc.classify(image_bytes)
+    classification = c.classify(image_bytes)
 
     return JSONResponse(
         content=content_ok(data=classification.model_dump()), 

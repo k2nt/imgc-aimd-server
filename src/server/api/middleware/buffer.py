@@ -4,7 +4,7 @@ import time
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
-class AIMDBuffer(BaseHTTPMiddleware):
+class AIMDBufferMiddleware(BaseHTTPMiddleware):
     def __init__(
             self,
             app,
