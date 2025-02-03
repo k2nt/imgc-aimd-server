@@ -1,6 +1,6 @@
 sla:
   max_req_latency_ms: 50
-  init_buffer_size_num_req: 5
+  init_buffer_capacity_num_req: 5
 
 server:
   port: 3000

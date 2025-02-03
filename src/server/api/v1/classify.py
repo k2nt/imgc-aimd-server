@@ -7,7 +7,7 @@ from dependency_injector.wiring import Provide, inject
 from server.di import DI
 from server.api.schema import content_ok
 from server.domain.entity.context import Context
-from server.service.imgc import Resnet50Service
+from server.api.controller.imgc import Resnet50Controller
 
 
 router = APIRouter(prefix='/classify', tags=['classify'])
@@ -17,7 +17,7 @@ router = APIRouter(prefix='/classify', tags=['classify'])
 @inject
 async def classify(
         image: UploadFile = File(...),
-        svc: Resnet50Service = Depends(Provide[DI.resnet50_service])
+        svc: Resnet50Controller = Depends(Provide[DI.resnet50_service])
 ):
     if image.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
@@ -37,7 +37,7 @@ async def classify(
 @router.post('/buffer')
 async def classify_buffer(
         image: UploadFile = File(...),
-        svc: Resnet50Service = Depends(Provide[DI.resnet50_service])
+        svc: Resnet50Controller = Depends(Provide[DI.resnet50_service])
 ):
     if image.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(

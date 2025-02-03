@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 
 from server.domain.entity.context import Context
-from server.service.imgc import Resnet50Service
+from server.api.controller.imgc import Resnet50Controller
 
 
 class DI(containers.DeclarativeContainer):
@@ -11,5 +11,5 @@ class DI(containers.DeclarativeContainer):
     )
 
     resnet50_service = providers.Factory(
-        Resnet50Service
+        Resnet50Controller
     )

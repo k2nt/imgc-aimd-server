@@ -7,7 +7,7 @@ from server.domain.entity.imgc import Classification
 import numpy as np
 
 
-class ImgcService:
+class ImgcController:
     def __init__(self, model: ImgcModel):
         self._model = model
 
@@ -28,6 +28,6 @@ class ImgcService:
         return self.model.classify(batch_image_array)
 
 
-class Resnet50Service(ImgcService):
+class Resnet50Controller(ImgcController):
     def __init__(self):
         super().__init__(Resnet50Model())
