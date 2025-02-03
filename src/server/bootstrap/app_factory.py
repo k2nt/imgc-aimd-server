@@ -29,9 +29,10 @@ async def lifespan(app: FastAPI):
 def build_app(ctx: Context) -> FastAPI:
     app = FastAPI(lifespan=lifespan)
     app.include_router(router)
-    app.add_middleware(
-        AIMDBufferMiddleware, 
-        init_capacity=ctx.sla.init_buffer_size_num_req,
-    )
+    # app.add_middleware(
+    #     AIMDBufferMiddleware, 
+    #     init_capacity=ctx.sla.init_buffer_size_num_req,
+    #     max_latency_ms=ctx.sla.max_req_latency_ms
+    # )
     return app
 

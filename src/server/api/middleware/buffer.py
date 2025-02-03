@@ -9,11 +9,11 @@ class AIMDBufferMiddleware(BaseHTTPMiddleware):
             self,
             app,
             init_capacity: int,
-            max_latency: float,
+            max_latency_ms: float,
     ):
         super().__init__(app)
 
-        self._MAX_LATENCY = max_latency
+        self._MAX_LATENCY_MS = max_latency_ms
         self._capacity = init_capacity
 
         # Semaphore to limit buffer size below capacity
@@ -36,8 +36,8 @@ class AIMDBufferMiddleware(BaseHTTPMiddleware):
         async with self._semaphore:
             _ = call_next(request)
 
-        latency = time.perf_counter() - self._start_time
-        if latency > self._max_latency:
+        latency_ms = (time.perf_counter() - self._start_time) * 1000
+        if latency_ms > self._MAX_LATENCY_MS:
             self._capacity = max(1, int(self._size * self._mult_dec_amt))
         else:
             self._capacity += self._add_inc_amt
