@@ -43,5 +43,8 @@ class InternalServerErrorException(BadHTTPException):
         )
 
 
-def response_ok(data: Optional[Dict[str, Any]]) -> JSONResponse:
-    return JSONResponse(content=data, status_code=http.HTTPStatus.OK)
+def response_ok(data: Optional[Dict[str, Any]] = {}) -> JSONResponse:
+    return JSONResponse(
+        content=BaseContent(code='ok', data=data).model_dump(),
+        status_code=http.HTTPStatus.OK
+    )

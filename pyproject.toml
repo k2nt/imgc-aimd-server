@@ -19,6 +19,8 @@ pillow = "^11.1.0"
 keras = "^3.8.0"
 pyyaml = "^6.0.2"
 dependency-injector = "^4.45.0"
+torch = "^2.6.0"
+torchvision = "^0.21.0"
 
 [tool.poetry.scripts]
 server = "src.server.main:launch"

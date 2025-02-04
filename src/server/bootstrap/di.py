@@ -7,3 +7,5 @@ class DI(containers.DeclarativeContainer):
     resnet50_controller = providers.Factory(
         Resnet50Controller
     )
+
+    buffer = providers.Singleton(list)
