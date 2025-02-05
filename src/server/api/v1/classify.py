@@ -42,26 +42,10 @@ async def classify(
 @inject
 async def classify_buffer(
         image: UploadFile = File(...),
-        buffer: List[Tuple[bytes, Future]] = Depends(Provide[DI.buffer])
 ):
     if image.content_type not in ['image/jpeg', 'image/png']:
         raise BadRequestException('Invalid image type. Only JPEG and PNG are allowed.')
 
     image_bytes = await image.read()
-    loop = asyncio.get_running_loop()
-    future = loop.create_future()
 
-    buffer.append((image_bytes, future))
-
-    # Classification is handled in buffer coroutine
-    # See server.job
-    classfication: Classification = await future
-
-    return response_ok(data=classfication.model_dump())
-
-    # classification = c.classify(image_bytes)
-
-    # return JSONResponse(
-    #     content=content_ok(data=classification.model_dump()), 
-    #     status_code=http.HTTPStatus.OK
-    # )
+    return response_ok()
