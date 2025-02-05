@@ -11,7 +11,9 @@ from server.api.schema import bad_http_exception_handler
 from server.api.middleware.buffer import AIMDBufferMiddleware
 from server.bootstrap.di import DI
 from server.bootstrap.context import Context
+from server.job import flush_aimd_buffer_job
 
+import server.job as server_job_module
 import server.api.v1.classify as api_v1_pkg
 
 
@@ -28,9 +30,9 @@ def setup_di(ctx: Context):
 
     # Add module paths that requires DI (with respect to `server`)
     modules = [
-        # server_job_module.__name__
+        server_job_module.__name__
     ]
-    modules = [f"src.{module}" for module in modules]
+    # modules = [f"src.{module}" for module in modules]
     
     # Add package paths that requires DI (with respect to `server`)
     # All component modules will be wired with DI
@@ -47,7 +49,7 @@ def setup_di(ctx: Context):
 
 
 def setup_coroutines():
-    pass
+    asyncio.create_task(flush_aimd_buffer_job())
 
 
 def setup_logging():
@@ -56,10 +58,10 @@ def setup_logging():
 
 
 def on_startup():
-    print('Launching AIMD buffer batch processing coroutine ...')
+    print('[MAIN] Launching AIMD buffer batch processing coroutine ...')
     setup_coroutines()
 
-    print('Configuring logging ...')
+    print('[MAIN] Configuring logging ...')
     setup_logging()
 
 

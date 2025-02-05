@@ -9,6 +9,6 @@ class DI(containers.DeclarativeContainer):
         Resnet50Controller
     )
 
-    aimd_buffer = providers.Factory(
+    aimd_buffer = providers.Singleton(
         AIMDBuffer
     )

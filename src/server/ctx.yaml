@@ -1,9 +1,8 @@
 sla:
-  max_latency_ms: 50
-  init_buffer_capacity_num_req: 5
+  max_latency_ms: 5000
 
 aimd_buffer:
-  init_capacity_num_req: 5
+  init_capacity_num_req: 3
   incr_amt: 2
   decr_fct: 0.9
 

@@ -67,24 +67,33 @@ class AIMDBuffer:
         while True:
             await asyncio.sleep(max_latency)
 
+            print('[AIMD_BUFFER] Checking max latency ...')
+
             cur_latency = time.perf_counter() - self._start_time
             if self._queue and cur_latency >= max_latency:
+                print('[AIMD_BUFFER] (check_max_latency) Buffer timed out, setting signal to flush ...')
                 self._can_flush_event.set()
                 self._timed_out = True
 
     async def put(self, data: Any):
+        print('[AIMD_BUFFER] Waiting for buffer to flush ...')
         await self._can_put_event.wait()
-
+        
         if not self._queue:
             self._start_time = time.perf_counter()
 
         self._queue.append(data)
 
+        print(f"[AIMD_BUFFER] (put) Putting item into buffer, buffer utilization is [{len(self._queue)} / {self._capacity}] ...")
+
         if self._at_capacity():
+            print('[AIMD_BUFFER] (put) Buffer is at capacity, setting signal to flush ...')
             self._set_can_flush_event()
 
     async def flush(self) -> List[Any]:
+        print('[AIMD_BUFFER] (flush) Waiting for flush signal ...')
         await self._can_flush_event.wait()
+        print(f"[AIMD_BUFFER] (flush) Flush signal received due to {'timed out' if self._timed_out else 'at capacity'}, flushing ...")
 
         q = self._queue.copy()
         self._queue.clear()

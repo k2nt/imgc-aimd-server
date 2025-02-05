@@ -1,7 +1,6 @@
 from typing import List, Tuple
 
 import asyncio
-from asyncio import Future
 
 from fastapi import APIRouter, File, UploadFile, Depends
 from dependency_injector.wiring import Provide, inject
@@ -14,6 +13,8 @@ from server.api.schema import (
 )
 from server.api.controller.imgc import Resnet50Controller
 from server.domain.entity.imgc import Classification
+from server.domain.entity.aimd_buffer import AIMDBufferItem
+from server.infra.aimd_buffer import AIMDBuffer
 
 
 router = APIRouter(prefix='/classify', tags=['classify'])
@@ -28,9 +29,8 @@ async def classify(
     if image.content_type not in ['image/jpeg', 'image/png']:
         raise BadRequestException('Invalid image type. Only JPEG and PNG are allowed.')
     
-    image_bytes = await image.read()
-
     try:
+        image_bytes = await image.read()
         classification = c.classify(image_bytes)
     except Exception as e:
         raise InternalServerErrorException(str(e))
@@ -42,10 +42,21 @@ async def classify(
 @inject
 async def classify_buffer(
         image: UploadFile = File(...),
+        buffer: AIMDBuffer = Depends(Provide[DI.aimd_buffer])
 ):
     if image.content_type not in ['image/jpeg', 'image/png']:
         raise BadRequestException('Invalid image type. Only JPEG and PNG are allowed.')
 
-    image_bytes = await image.read()
+    try:
+        image_bytes = await image.read()
 
-    return response_ok()
+        loop = asyncio.get_running_loop()
+        result_ticket = loop.create_future()
+        await buffer.put(AIMDBufferItem(data=image_bytes, result_ticket=result_ticket))
+
+        # Actual classification managed in buffer coroutine
+        classification: Classification = await result_ticket
+    except Exception as e:
+        raise InternalServerErrorException(str(e))
+
+    return response_ok(data = classification.model_dump())

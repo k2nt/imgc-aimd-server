@@ -90,7 +90,7 @@ def classify_sequential(image_folder):
 SINGLE_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/single"
 CIFAR_100_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/cifar-100-python"
 CAT_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-aimd-server-datasets/animal/animals/animals/cat"
-ANIMAL_RANDOM_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-datasets/animal/animals/animals/cat"
+ANIMAL_RANDOM_DATASET_FOLDER = "/Users/khainguyen/Documents/work/lass/adaptive-batching/code/imgc-datasets/animal/animals/animals-random"
 
-classify_batch(ANIMAL_RANDOM_DATASET_FOLDER)
+# classify_batch(ANIMAL_RANDOM_DATASET_FOLDER)
 # classify_sequential(ANIMAL_RANDOM_DATASET_FOLDER)
