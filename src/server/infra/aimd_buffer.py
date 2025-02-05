@@ -100,8 +100,10 @@ class AIMDBuffer:
 
         if self._timed_out:
             self._decrease_capacity()
+            print(f"[AIMD_BUFFER] Decreasing capacity, new capacity is {self._capacity}")
         else:
             self._increase_capacity()
+            print(f"[AIMD_BUFFER] Increasing capacity, new capacity is {self._capacity}")
 
         self._set_can_put_event()
         return q
