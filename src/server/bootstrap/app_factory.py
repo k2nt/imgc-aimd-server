@@ -1,7 +1,9 @@
+import os
 import asyncio
 import logging
 
 import tensorflow as tf
+
 import keras.api.config as keras_config
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
@@ -11,6 +13,7 @@ from server.api.schema import bad_http_exception_handler
 from server.api.middleware.buffer import AIMDBufferMiddleware
 from server.bootstrap.di import DI
 from server.bootstrap.context import Context
+from server.infra.logger import logger
 from server.job import flush_aimd_buffer_job
 
 import server.job as server_job_module
@@ -53,15 +56,16 @@ def setup_coroutines():
 
 
 def setup_logging():
+    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
     tf.get_logger().setLevel(logging.ERROR)
     keras_config.disable_interactive_logging()
 
 
 def on_startup():
-    print('[MAIN] Launching AIMD buffer batch processing coroutine ...')
+    logger.info('[MAIN] Launching AIMD buffer batch processing coroutine ...')
     setup_coroutines()
 
-    print('[MAIN] Configuring logging ...')
+    logger.info('[MAIN] Configuring external logging ...')
     setup_logging()
 
 
@@ -77,7 +81,7 @@ async def lifespan(app: FastAPI):
 
 
 def build_app(ctx: Context) -> FastAPI:
-    print('Setting up dependency injection ...')
+    logger.info('[MAIN] Building application ...')
     setup_di(ctx)
 
     app = FastAPI(lifespan=lifespan)
