@@ -3,6 +3,8 @@ from typing import Any, List
 import asyncio
 import time
 
+from server.infra.logger import logger
+
 
 _MAX_BUFFER_CAPACITY = 100
 _MIN_BUFFER_CAPACITY = 1
@@ -67,16 +69,16 @@ class AIMDBuffer:
         while True:
             await asyncio.sleep(max_latency)
 
-            print('[AIMD_BUFFER] Checking max latency ...')
+            logger.debug('[AIMD_BUFFER] (_check_max_latency) Checking max latency ...')
 
             cur_latency = time.perf_counter() - self._start_time
             if self._queue and cur_latency >= max_latency:
-                print('[AIMD_BUFFER] (check_max_latency) Buffer timed out, setting signal to flush ...')
+                logger.debug('[AIMD_BUFFER] (_check_max_latency) Buffer timed out, setting signal to flush ...')
                 self._can_flush_event.set()
                 self._timed_out = True
 
     async def put(self, data: Any):
-        print('[AIMD_BUFFER] Waiting for buffer to flush ...')
+        logger.info('[AIMD_BUFFER] Waiting for buffer to flush ...')
         await self._can_put_event.wait()
         
         if not self._queue:
@@ -84,26 +86,26 @@ class AIMDBuffer:
 
         self._queue.append(data)
 
-        print(f"[AIMD_BUFFER] (put) Putting item into buffer, buffer utilization is [{len(self._queue)} / {self._capacity}] ...")
+        logger.debug(f"[AIMD_BUFFER] (put) Putting item into buffer, buffer utilization is [{len(self._queue)} / {self._capacity}] ...")
 
         if self._at_capacity():
-            print('[AIMD_BUFFER] (put) Buffer is at capacity, setting signal to flush ...')
+            logger.debug('[AIMD_BUFFER] (put) Buffer is at capacity, setting signal to flush ...')
             self._set_can_flush_event()
 
     async def flush(self) -> List[Any]:
-        print('[AIMD_BUFFER] (flush) Waiting for flush signal ...')
+        logger.debug('[AIMD_BUFFER] (flush) Waiting for flush signal ...')
         await self._can_flush_event.wait()
-        print(f"[AIMD_BUFFER] (flush) Flush signal received due to {'timed out' if self._timed_out else 'at capacity'}, flushing ...")
+        logger.debug(f"[AIMD_BUFFER] (flush) Flush signal received due to {'timed out' if self._timed_out else 'at capacity'}, flushing ...")
 
         q = self._queue.copy()
         self._queue.clear()
 
         if self._timed_out:
             self._decrease_capacity()
-            print(f"[AIMD_BUFFER] Decreasing capacity, new capacity is {self._capacity}")
+            logger.debug(f"[AIMD_BUFFER] (flush) Decreasing capacity, new capacity is {self._capacity}")
         else:
             self._increase_capacity()
-            print(f"[AIMD_BUFFER] Increasing capacity, new capacity is {self._capacity}")
+            logger.debug(f"[AIMD_BUFFER] (flush) Increasing capacity, new capacity is {self._capacity}")
 
         self._set_can_put_event()
         return q

@@ -1,7 +1,5 @@
 from typing import List
 
-import asyncio
-
 from dependency_injector.wiring import Provide, inject
 
 from server.bootstrap.di import DI
